@@ -39,9 +39,6 @@ class TextBox:
     hpad : float
         The horizontal padding between the box and the text content, in data
         coordinates.
-    vpad : float
-        The vertical padding between the box and the text content, in data
-        coordinates.
     text_alignment : str
         The text alignment within the box. Either ``'center'`` or ``'left'``.
     """
@@ -58,7 +55,6 @@ class TextBox:
         font: str,
         fontsize=12,
         hpad: float = 0.01,
-        vpad: float = 0.01,
         text_alignment: str = "center",
     ) -> None:
         """Initialize a TextBox instance."""
@@ -81,9 +77,6 @@ class TextBox:
         check_type(hpad, ("numeric",), "pad")
         if hpad < 0:
             raise ValueError("The hpad parameter must be a positive number.")
-        check_type(vpad, ("numeric",), "pad")
-        if vpad < 0:
-            raise ValueError("The vpad parameter must be a positive number.")
         check_type(text_alignment, (str,), "text_alignment")
         check_value(text_alignment, ("center", "left"), "text_alignment")
         self._text = text
@@ -96,7 +89,6 @@ class TextBox:
         self._font = font
         self._fontsize = fontsize
         self._hpad = hpad
-        self._vpad = vpad
         self._text_alignment = text_alignment
 
         # create the associated boxstyle
