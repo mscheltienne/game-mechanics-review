@@ -12,6 +12,7 @@ from ._constants import (
     INTERVENTION_TYPE_ORDER,
     VPAD,
 )
+from ._link import link_textbox
 from .text import TextBox
 from .utils._checks import check_type, check_value
 
@@ -71,6 +72,7 @@ class FigureGame:
             width=COLUMN_WIDTHS[0],
             height=0.05,
             bgcolor="#eeeeee",
+            edgecolor="black",
             boxstyle="square,pad=0",
             text_color="black",
             font="Consolas",
@@ -101,6 +103,7 @@ class FigureGame:
                 width=COLUMN_WIDTHS[k],
                 height=0.07,
                 bgcolor="#eeeeee",
+                edge_color="black",
                 boxstyle="square,pad=0" if k == 2 else "round,pad=0,rounding_size=0.01",
                 text_color="black",
                 font="Corbel",
@@ -180,7 +183,7 @@ class FigureGame:
         y_pos_what = self._y_pos_engagement_init
         for what, hows in whats.items():
             # draw the what
-            TextBox(
+            text_what = TextBox(
                 text=what,
                 xy=(np.sum(COLUMN_WIDTHS[:2]) + 2 * HPAD, y_pos_what),
                 width=COLUMN_WIDTHS[2],
@@ -192,7 +195,9 @@ class FigureGame:
                 fontsize=12,
                 hpad=0.01,
                 text_alignment="left",
-            ).draw(self._ax)
+            )
+            text_what.draw(self._ax)
+            link_textbox(self._ax, text_engagement, text_what)
             # draw the hows
             y_pos_how = y_pos_what
             for how in hows:
@@ -210,6 +215,7 @@ class FigureGame:
                     text_alignment="left",
                 )
                 text_how.draw(self._ax)
+                link_textbox(self._ax, text_what, text_how)
                 y_pos_how += text_how._height + VPAD
                 y_pos_what += text_how._height + VPAD
         self._y_pos_engagement_init = max(

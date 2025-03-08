@@ -27,6 +27,9 @@ class TextBox:
     bgcolor : str
         The background color of the textbox. See the matplotlib color documentation:
         https://matplotlib.org/stable/gallery/color/named_colors.html
+    edgecolor : str
+        The edge color of the textbox. See the matplotlib color documentation:
+        https://matplotlib.org/stable/gallery/color/named_colors.html
     boxstyle : str
         The box style, for instance ``"round,pad=0,rounding_size=0.05"`` or
         ``"square,pad=0"``.
@@ -51,6 +54,7 @@ class TextBox:
         width: float,
         height: float | str,
         bgcolor: str,
+        edgecolor: str,
         boxstyle: str,
         text_color: str,
         font: str,
@@ -70,6 +74,7 @@ class TextBox:
         if isinstance(height, str) and height != "auto":
             raise ValueError("The height parameter must be a float or 'auto'.")
         check_type(bgcolor, (str,), "bgcolor")
+        check_type(edgecolor, (str,), "edgecolor")
         check_type(boxstyle, (str,), "boxstyle")
         check_type(text_color, (str,), "text_color")
         check_type(font, (str,), "font")
@@ -84,6 +89,7 @@ class TextBox:
         self._width = width
         self._height = height
         self._bgcolor = bgcolor
+        self._edgecolor = edgecolor
         self._boxstyle = boxstyle
         self._text_color = text_color
         self._font = font
@@ -140,7 +146,8 @@ class TextBox:
             boxstyle=self._boxstyle,
             linewidth=1,
             facecolor=self._bgcolor,
-            edgecolor="black",
+            edgecolor=self._edgecolor,
+            zorder=1,  # Keep it below the text
         )
         ax.add_patch(textbox_patch)
         # draw the text, with the same logic as the auto height

@@ -31,7 +31,7 @@ COLUMNS_HEIGHTS: tuple[float, float] = (
 )  # only defined for the first two columns
 
 # common graphic properties
-HPAD: float = 0.01
+HPAD: float = 0.015
 VPAD: float = 0.005
 
 # sanity-check the constants
