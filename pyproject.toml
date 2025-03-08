@@ -24,6 +24,7 @@ dependencies = [
   'numpy>=1.23,<3',
   'packaging',
   'psutil',
+  'pyqt6',
 ]
 description = 'Python package to generate figures for a game mechanics review.'
 dynamic = ["version"]
@@ -45,6 +46,7 @@ all = [
   'gmr[build]',
   'gmr[style]',
   'gmr[test]',
+  'gmr[vscode]',
 ]
 build = [
   'build',
@@ -65,6 +67,10 @@ test = [
   'pytest-cov',
   'pytest-timeout',
   'pytest>=8.0',
+]
+vscode = [
+  'ipykernel',
+  'ipython',
 ]
 
 [project.scripts]
