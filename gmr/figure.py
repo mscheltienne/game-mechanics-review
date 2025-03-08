@@ -12,7 +12,7 @@ from ._constants import (
     INTERVENTION_TYPE_ORDER,
     VPAD,
 )
-from ._link import link_textbox
+from .link import link
 from .text import TextBox
 from .utils._checks import check_type, check_value
 
@@ -68,17 +68,16 @@ class FigureGame:
         """Draw the title at the top of the first column."""
         self._bbox_title = TextBox(
             text=self._name,
-            xy=(0, 0),
+            x=0,
+            y=0,
             width=COLUMN_WIDTHS[0],
             height=0.05,
-            bgcolor="#eeeeee",
-            edgecolor="black",
-            boxstyle="square,pad=0",
-            text_color="black",
-            font="Consolas",
-            fontsize=20,
             hpad=0.5,
             text_alignment="center",
+            bbox_kwargs=dict(
+                facecolor="#eeeeee", edgecolor="black", boxstyle="square,pad=0"
+            ),
+            text_kwargs=dict(color="black", font="Consolas", fontsize=24),
         )
         self._bbox_title.draw(self._ax)
 
@@ -99,17 +98,24 @@ class FigureGame:
         for k, header in enumerate(headers):
             text = TextBox(
                 text=header,
-                xy=(x_pos, self._bbox_title._height + VPAD),
+                x=x_pos,
+                y=self._bbox_title._height + VPAD,
                 width=COLUMN_WIDTHS[k],
                 height=0.07,
-                bgcolor="#eeeeee",
-                edge_color="black",
-                boxstyle="square,pad=0" if k == 2 else "round,pad=0,rounding_size=0.01",
-                text_color="black",
-                font="Corbel",
-                fontsize=18,
                 hpad=0.01,
                 text_alignment="center",
+                bbox_kwargs=dict(
+                    facecolor="#eeeeee",
+                    edgecolor="black",
+                    boxstyle="square,pad=0"
+                    if k == 2
+                    else "round,pad=0,rounding_size=0.01",
+                ),
+                text_kwargs=dict(
+                    color="black",
+                    font="Corbel",
+                    fontsize=18,
+                ),
             )
             text.draw(self._ax)
             x_pos += COLUMN_WIDTHS[k] + HPAD
@@ -139,16 +145,22 @@ class FigureGame:
                 continue
             TextBox(
                 text=inter,
-                xy=(0, y_pos),
+                x=0,
+                y=y_pos,
                 width=COLUMN_WIDTHS[0],
                 height=COLUMNS_HEIGHTS[0],
-                bgcolor=INTERVENTION_TYPE_COLORS[inter],
-                boxstyle="round,pad=0,rounding_size=0.005",
-                text_color="black",
-                font="DejaVu Sans",
-                fontsize=14,
                 hpad=0.01,
                 text_alignment="center",
+                bbox_kwargs=dict(
+                    facecolor=INTERVENTION_TYPE_COLORS[inter],
+                    boxstyle="round,pad=0,rounding_size=0.005",
+                    edgecolor="black",
+                ),
+                text_kwargs=dict(
+                    color="black",
+                    font="DejaVu Sans",
+                    fontsize=14,
+                ),
             ).draw(self._ax)
             y_pos += COLUMNS_HEIGHTS[0] + VPAD
 
@@ -167,16 +179,21 @@ class FigureGame:
         # first, we can draw the engagement name in the second column
         text_engagement = TextBox(
             text=name,
-            xy=(COLUMN_WIDTHS[0] + HPAD, self._y_pos_engagement_init),
+            x=COLUMN_WIDTHS[0] + HPAD,
+            y=self._y_pos_engagement_init,
             width=COLUMN_WIDTHS[1],
             height=COLUMNS_HEIGHTS[1],
-            bgcolor=ENGAGEMENT_TYPE_COLORS[name],
-            boxstyle="round,pad=0,rounding_size=0.005",
-            text_color="black",
-            font="DejaVu Sans",
-            fontsize=14,
             hpad=0.01,
             text_alignment="center",
+            bbox_kwargs=dict(
+                facecolor=ENGAGEMENT_TYPE_COLORS[name],
+                boxstyle="round,pad=0,rounding_size=0.005",
+            ),
+            text_kwargs=dict(
+                color="black",
+                font="DejaVu Sans",
+                fontsize=14,
+            ),
         )
         text_engagement.draw(self._ax)
         # then we iterate on the whats and hows
@@ -185,37 +202,69 @@ class FigureGame:
             # draw the what
             text_what = TextBox(
                 text=what,
-                xy=(np.sum(COLUMN_WIDTHS[:2]) + 2 * HPAD, y_pos_what),
+                x=np.sum(COLUMN_WIDTHS[:2]) + 2 * HPAD,
+                y=y_pos_what,
                 width=COLUMN_WIDTHS[2],
                 height="auto",
-                bgcolor="#ffffff",
-                boxstyle="square,pad=0",
-                text_color="black",
-                font="DejaVu Sans",
-                fontsize=12,
                 hpad=0.01,
                 text_alignment="left",
+                bbox_kwargs=dict(
+                    facecolor="#ffffff",
+                    boxstyle="square,pad=0",
+                    edgecolor=ENGAGEMENT_TYPE_COLORS[name],
+                    linewidth=1.5,
+                ),
+                text_kwargs=dict(
+                    color="black",
+                    font="DejaVu Sans",
+                    fontsize=12,
+                ),
             )
             text_what.draw(self._ax)
-            link_textbox(self._ax, text_engagement, text_what)
+            link(
+                self._ax,
+                text_engagement,
+                text_what,
+                kwargs=dict(
+                    facecolor="none",
+                    edgecolor=ENGAGEMENT_TYPE_COLORS[name],
+                    linewidth=1.5,
+                ),
+            )
             # draw the hows
             y_pos_how = y_pos_what
             for how in hows:
                 text_how = TextBox(
                     text=how,
-                    xy=(np.sum(COLUMN_WIDTHS[:3]) + 3 * HPAD, y_pos_how),
+                    x=np.sum(COLUMN_WIDTHS[:3]) + 3 * HPAD,
+                    y=y_pos_how,
                     width=COLUMN_WIDTHS[3],
                     height="auto",
-                    bgcolor="#ffffff",
-                    boxstyle="round,pad=0,rounding_size=0.005",
-                    text_color="black",
-                    font="DejaVu Sans",
-                    fontsize=12,
                     hpad=0.01,
                     text_alignment="left",
+                    bbox_kwargs=dict(
+                        facecolor="#ffffff",
+                        boxstyle="round,pad=0,rounding_size=0.005",
+                        edgecolor=ENGAGEMENT_TYPE_COLORS[name],
+                        linewidth=1.5,
+                    ),
+                    text_kwargs=dict(
+                        color="black",
+                        font="DejaVu Sans",
+                        fontsize=12,
+                    ),
                 )
                 text_how.draw(self._ax)
-                link_textbox(self._ax, text_what, text_how)
+                link(
+                    self._ax,
+                    text_what,
+                    text_how,
+                    kwargs=dict(
+                        facecolor="none",
+                        edgecolor=ENGAGEMENT_TYPE_COLORS[name],
+                        linewidth=1.5,
+                    ),
+                )
                 y_pos_how += text_how._height + VPAD
                 y_pos_what += text_how._height + VPAD
         self._y_pos_engagement_init = max(
