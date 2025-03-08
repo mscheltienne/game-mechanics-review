@@ -24,10 +24,10 @@ ENGAGEMENT_TYPE_ORDER: tuple[str] = (
     "Socio-cultural",
 )
 
-COLUMN_WIDTHS: tuple[float, float, float, float] = (0.12, 0.1, 0.3, 0.3)
+COLUMN_WIDTHS: tuple[float, float, float, float] = (0.14, 0.1, 0.3, 0.3)
 COLUMNS_HEIGHTS: tuple[float, float] = (
-    0.07,
-    0.07,
+    0.04,
+    0.04,
 )  # only defined for the first two columns
 
 # common graphic properties

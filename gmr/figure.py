@@ -31,7 +31,7 @@ class FigureGame:
     +-----------------------------------------------------------------+
     """
 
-    def __init__(self, name: str, *, figsize: tuple[int, int] = (20, 20)) -> None:
+    def __init__(self, name: str, *, figsize: tuple[int, int] = (15, 10)) -> None:
         check_type(name, (str,), "name")
         check_type(figsize, (tuple,), "figsize")
         if len(figsize) != 2:
@@ -59,6 +59,9 @@ class FigureGame:
         self._draw_intervention_type(intervention_types)
         for name, whats in engagements.items():
             self._draw_engagement(name, whats)
+        # now resize based on the update `self._y_pos_engagement_init` value
+        self._ax.set_ylim(self._y_pos_engagement_init, 0)
+        self._ax.set_xlim(0, np.sum(COLUMN_WIDTHS) + 3 * HPAD)
 
     def _draw_title(self) -> None:
         """Draw the title at the top of the first column."""
@@ -71,7 +74,7 @@ class FigureGame:
             boxstyle="square,pad=0",
             text_color="black",
             font="Consolas",
-            fontsize=24,
+            fontsize=20,
             hpad=0.5,
             text_alignment="center",
         )
@@ -101,7 +104,7 @@ class FigureGame:
                 boxstyle="square,pad=0" if k == 2 else "round,pad=0,rounding_size=0.01",
                 text_color="black",
                 font="Corbel",
-                fontsize=22,
+                fontsize=18,
                 hpad=0.01,
                 text_alignment="center",
             )
@@ -140,7 +143,7 @@ class FigureGame:
                 boxstyle="round,pad=0,rounding_size=0.005",
                 text_color="black",
                 font="DejaVu Sans",
-                fontsize=18,
+                fontsize=14,
                 hpad=0.01,
                 text_alignment="center",
             ).draw(self._ax)
@@ -168,7 +171,7 @@ class FigureGame:
             boxstyle="round,pad=0,rounding_size=0.005",
             text_color="black",
             font="DejaVu Sans",
-            fontsize=18,
+            fontsize=14,
             hpad=0.01,
             text_alignment="center",
         )
@@ -183,10 +186,10 @@ class FigureGame:
                 width=COLUMN_WIDTHS[2],
                 height="auto",
                 bgcolor="#ffffff",
-                boxstyle="round,pad=0,rounding_size=0.005",
+                boxstyle="square,pad=0",
                 text_color="black",
                 font="DejaVu Sans",
-                fontsize=16,
+                fontsize=12,
                 hpad=0.01,
                 text_alignment="left",
             ).draw(self._ax)
@@ -202,7 +205,7 @@ class FigureGame:
                     boxstyle="round,pad=0,rounding_size=0.005",
                     text_color="black",
                     font="DejaVu Sans",
-                    fontsize=16,
+                    fontsize=12,
                     hpad=0.01,
                     text_alignment="left",
                 )
