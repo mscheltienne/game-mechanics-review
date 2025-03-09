@@ -141,8 +141,13 @@ class FigureGame:
         y_pos = self._bbox_title._height + self._bbox_headers[0]._height + 2 * VPAD
         for inter in INTERVENTION_TYPE_ORDER:
             if inter not in intervention_types:
-                y_pos += COLUMNS_HEIGHTS[0] + VPAD
-                continue
+                facecolor = INTERVENTION_TYPE_COLORS[inter] + "10"
+                edgecolor = "lightgray"
+                textcolor = "lightgray"
+            else:
+                facecolor = INTERVENTION_TYPE_COLORS[inter] + "ff"
+                edgecolor = "black"
+                textcolor = "black"
             TextBox(
                 text=inter,
                 x=0,
@@ -152,12 +157,12 @@ class FigureGame:
                 hpad=0.01,
                 text_alignment="center",
                 bbox_kwargs=dict(
-                    facecolor=INTERVENTION_TYPE_COLORS[inter],
+                    facecolor=facecolor,
                     boxstyle="round,pad=0,rounding_size=0.005",
-                    edgecolor="black",
+                    edgecolor=edgecolor,
                 ),
                 text_kwargs=dict(
-                    color="black",
+                    color=textcolor,
                     font="DejaVu Sans",
                     fontsize=14,
                 ),
