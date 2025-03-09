@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.patches import FancyBboxPatch
 
 from ._constants import (
     COLUMN_WIDTHS,
@@ -11,6 +12,8 @@ from ._constants import (
     INTERVENTION_TYPE_COLORS,
     INTERVENTION_TYPE_ORDER,
     VPAD,
+    VPAD_EXTRA_BELOW_HEADER,
+    VPAD_EXTRA_BELOW_TITLE,
 )
 from .link import link
 from .text import TextBox
@@ -61,8 +64,8 @@ class FigureGame:
         for name, whats in engagements.items():
             self._draw_engagement(name, whats)
         # now resize based on the update `self._y_pos_engagement_init` value
-        self._ax.set_ylim(self._y_pos_engagement_init, 0)
-        self._ax.set_xlim(0, np.sum(COLUMN_WIDTHS) + 3 * HPAD)
+        self._ax.set_ylim(self._y_pos_engagement_init + VPAD, -VPAD)
+        self._ax.set_xlim(-HPAD, np.sum(COLUMN_WIDTHS) + 4 * HPAD)
 
     def _draw_title(self) -> None:
         """Draw the title at the top of the first column."""
@@ -75,7 +78,7 @@ class FigureGame:
             hpad=0.5,
             text_alignment="center",
             bbox_kwargs=dict(
-                facecolor="#eeeeee", edgecolor="black", boxstyle="square,pad=0"
+                facecolor="#ffffff", edgecolor="white", boxstyle="square,pad=0"
             ),
             text_kwargs=dict(color="black", font="Consolas", fontsize=24),
         )
@@ -99,7 +102,7 @@ class FigureGame:
             text = TextBox(
                 text=header,
                 x=x_pos,
-                y=self._bbox_title._height + VPAD,
+                y=self._bbox_title._height + VPAD + VPAD_EXTRA_BELOW_TITLE,
                 width=COLUMN_WIDTHS[k],
                 height=0.07,
                 hpad=0.01,
@@ -138,7 +141,13 @@ class FigureGame:
         intervention_types = [inter.strip() for inter in intervention_types]
         # properties
         # draw the boxes
-        y_pos = self._bbox_title._height + self._bbox_headers[0]._height + 2 * VPAD
+        y_pos = (
+            self._bbox_title._height
+            + self._bbox_headers[0]._height
+            + 2 * VPAD
+            + VPAD_EXTRA_BELOW_TITLE
+            + VPAD_EXTRA_BELOW_HEADER
+        )
         for inter in INTERVENTION_TYPE_ORDER:
             if inter not in intervention_types:
                 facecolor = INTERVENTION_TYPE_COLORS[inter] + "10"
@@ -168,6 +177,28 @@ class FigureGame:
                 ),
             ).draw(self._ax)
             y_pos += COLUMNS_HEIGHTS[0] + VPAD
+        # add a boundary box around
+        x = -HPAD / 4
+        y = (
+            self._bbox_title._height
+            + self._bbox_headers[0]._height
+            + 1.25 * VPAD
+            + VPAD_EXTRA_BELOW_TITLE
+            + VPAD_EXTRA_BELOW_HEADER
+        )
+        width = COLUMN_WIDTHS[0] + HPAD / 2
+        height = (COLUMNS_HEIGHTS[0] + VPAD) * len(INTERVENTION_TYPE_COLORS) + VPAD / 2
+        boundary_patch = FancyBboxPatch(
+            (x, y),
+            width,
+            height,
+            boxstyle="round,pad=0,rounding_size=0.005",
+            linewidth=1.5,
+            edgecolor="black",
+            facecolor="none",
+            zorder=0,
+        )
+        self._ax.add_patch(boundary_patch)
 
     def _draw_engagement(
         self, name: str, whats: dict[str, tuple[str, ...] | list[str]]
@@ -179,7 +210,11 @@ class FigureGame:
             if not hasattr(self, "_bbox_title") or not hasattr(self, "_bbox_headers"):
                 raise RuntimeError("The title and headers must be drawn first.")
             self._y_pos_engagement_init = (
-                self._bbox_title._height + self._bbox_headers[0]._height + 2 * VPAD
+                self._bbox_title._height
+                + self._bbox_headers[0]._height
+                + 2 * VPAD
+                + VPAD_EXTRA_BELOW_TITLE
+                + VPAD_EXTRA_BELOW_HEADER
             )
         # first, we can draw the engagement name in the second column
         text_engagement = TextBox(

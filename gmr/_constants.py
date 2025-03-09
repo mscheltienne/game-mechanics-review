@@ -33,6 +33,8 @@ COLUMNS_HEIGHTS: tuple[float, float] = (
 # common graphic properties
 HPAD: float = 0.015
 VPAD: float = 0.005
+VPAD_EXTRA_BELOW_TITLE: float = 0.01
+VPAD_EXTRA_BELOW_HEADER: float = 0.01
 
 # sanity-check the constants
 assert all(key in INTERVENTION_TYPE_COLORS for key in INTERVENTION_TYPE_ORDER), (
