@@ -50,7 +50,7 @@ class FigureGame:
     ) -> None:
         """Draw the figure on a matplotlib axes."""
         self._fig, self._ax = plt.subplots(
-            1, 1, figsize=self._figsize, layout="constrained"
+            1, 1, figsize=self._figsize, layout="constrained", facecolor="white"
         )
         self._ax.invert_yaxis()
         self._ax.axis("off")
