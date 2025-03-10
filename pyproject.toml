@@ -29,8 +29,8 @@ dependencies = [
 description = 'Python package to generate figures for a game mechanics review.'
 dynamic = ["version"]
 keywords = [
-  'python',
   'game',
+  'python',
   'review',
 ]
 license = {file = 'LICENSE'}
